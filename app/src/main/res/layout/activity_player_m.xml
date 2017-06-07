@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.hrbtechsolutions.mplayer.mediaplayer.PlayerMActivity">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        tools:layout_editor_absoluteY="8dp"
+        tools:layout_editor_absoluteX="8dp"
+        tools:ignore="MissingConstraints">
+
+        <TextView
+            android:id="@+id/TitleOfSong"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Title of The Song"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:padding="30dp"
+ />
+
+
+        <TextView
+            android:id="@+id/ArtistOfSong"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="20dp"
+            android:text="Artist Of Song"
+            android:textAlignment="center"
+            android:textSize="15sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            tools:layout_editor_absoluteY="127dp" />
+
+        <ImageView
+            android:id="@+id/SongArt"
+            android:layout_width="match_parent"
+            android:layout_height="121dp"
+
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:srcCompat="@mipmap/ic_launcher_round"
+            tools:layout_editor_absoluteY="215dp" />
+
+      <GridLayout
+          android:layout_width="match_parent"
+          android:layout_height="60dp">
+
+          <TextView
+              android:id="@+id/CurrentTime"
+              android:layout_width="0dp"
+              android:layout_height="match_parent"
+              android:text="00:00"
+              android:layout_columnWeight="1"
+              android:textSize="30dp"
+              android:gravity="center"
+              />
+          <TextView
+              android:layout_width="0dp"
+              android:layout_height="match_parent"
+              android:text="OF"
+              android:layout_columnWeight="1"
+              android:textSize="30dp"
+              android:gravity="center"
+              />
+          <TextView
+              android:id="@+id/TotalTime"
+              android:layout_width="0dp"
+              android:layout_height="match_parent"
+              android:text="00:00"
+              android:layout_columnWeight="1"
+              android:textSize="30dp"
+              android:gravity="center"
+              />
+      </GridLayout>
+
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            >
+
+        <ImageButton
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_columnWeight="1"
+            android:src="@drawable/rewind"
+            />
+
+            <ImageButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_columnWeight="1"
+                android:src="@drawable/play"
+                />
+
+            <ImageButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_columnWeight="1"
+                android:src="@drawable/pause"
+                />
+            <ImageButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_columnWeight="1"
+                android:src="@drawable/stop"
+                />
+            <ImageButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_columnWeight="1"
+                android:src="@drawable/forward"
+                />
+        </GridLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:orientation="horizontal"></LinearLayout>
+
+        <SeekBar
+            android:id="@+id/seekBar"
+            style="@style/Widget.AppCompat.SeekBar"
+            android:layout_width="match_parent"
+            android:layout_height="14dp"
+            android:progressBackgroundTint="@android:color/background_dark"
+            tools:layout_editor_absoluteX="35dp"
+            tools:layout_editor_absoluteY="452dp" />
+
+
+
+
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>
