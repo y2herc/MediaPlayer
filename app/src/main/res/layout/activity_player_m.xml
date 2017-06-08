@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorbackground"
     tools:context="com.hrbtechsolutions.mplayer.mediaplayer.PlayerMActivity">
 
     <LinearLayout
@@ -85,37 +86,49 @@
             android:layout_height="60dp"
             >
 
-        <ImageButton
+        <Button
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_columnWeight="1"
-            android:src="@drawable/rewind"
+            android:drawableLeft="@drawable/rewind"
+            android:background="@color/colorbackground"
             />
 
-            <ImageButton
+            <Button
+                android:id="@+id/PlayButton"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_columnWeight="1"
-                android:src="@drawable/play"
+                android:drawableLeft="@drawable/play"
+                android:background="@color/colorbackground"
+
                 />
 
-            <ImageButton
+            <Button
+                android:id="@+id/PauseButton"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_columnWeight="1"
-                android:src="@drawable/pause"
-                />
-            <ImageButton
+                android:background="@color/colorbackground"
+
+                android:drawableLeft="@drawable/pause" />
+
+            <Button
+                android:id="@+id/StopButton"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_columnWeight="1"
-                android:src="@drawable/stop"
-                />
-            <ImageButton
+                android:background="@color/colorbackground"
+
+                android:drawableLeft="@drawable/stop" />
+
+            <Button
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_columnWeight="1"
-                android:src="@drawable/forward"
+                android:drawableLeft="@drawable/forward"
+                android:background="@color/colorbackground"
+
                 />
         </GridLayout>
 
