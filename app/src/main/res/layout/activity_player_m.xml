@@ -68,11 +68,10 @@
               android:id="@+id/CurrentTime"
               android:layout_width="0dp"
               android:layout_height="match_parent"
-              android:text="00:00"
               android:layout_columnWeight="1"
-              android:textSize="30dp"
               android:gravity="center"
-              />
+              android:text="0:00"
+              android:textSize="30dp" />
           <TextView
               android:layout_width="0dp"
               android:layout_height="match_parent"
@@ -81,15 +80,15 @@
               android:textSize="30dp"
               android:gravity="center"
               />
+
           <TextView
               android:id="@+id/TotalTime"
               android:layout_width="0dp"
               android:layout_height="match_parent"
-              android:text="00:00"
               android:layout_columnWeight="1"
-              android:textSize="30dp"
               android:gravity="center"
-              />
+              android:text="0:00"
+              android:textSize="30dp" />
       </GridLayout>
 
         <GridLayout
