@@ -85,7 +85,6 @@ public class PlayerMActivity extends AppCompatActivity {
 
 
 
-
         TotalTime.setText(String.format("%d:%d",
                 TimeUnit.MILLISECONDS.toMinutes(totalTime),
                 TimeUnit.MILLISECONDS.toSeconds(totalTime))
