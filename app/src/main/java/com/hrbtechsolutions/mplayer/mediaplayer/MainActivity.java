@@ -67,7 +67,6 @@ public class MainActivity extends AppCompatActivity {
         SongAdapter adapter=new SongAdapter(this,arrayofSongs);
         AdapterView.OnItemClickListener mMessageClickedHandler = new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView parent, View v, int position, long id) {
-                // Do something in response to the click
 
                 Uri myUri=Uri.parse(arrayofSongs.get(position).dataPath);
 
