@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
+
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 import android.os.Handler;
 
@@ -31,14 +33,24 @@ public class PlayerMActivity extends AppCompatActivity {
 
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mediaPlayer.stop();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player_m);
 
-        mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.aitebaar);
+        Uri myUri = Uri.parse(getIntent().getExtras().getString("uri"));
+
+        mediaPlayer = MediaPlayer.create(getApplicationContext(),myUri);
+
+        StartPlay();
 
         Uri uri;
-        uri = Uri.parse("android.resource://com.hrbtechsolutions.mplayer.mediaplayer/" + R.raw.aitebaar);
+        uri=myUri;
 
         buttonPlay = (Button) findViewById(R.id.PlayButton);
         buttonStop = (Button) findViewById(R.id.StopButton);
@@ -51,7 +63,6 @@ public class PlayerMActivity extends AppCompatActivity {
         seekBar = (SeekBar) findViewById(R.id.seekBar);
         totalTime = mediaPlayer.getDuration();
         seekBar.setMax((int)totalTime);
-
 
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -87,21 +98,15 @@ public class PlayerMActivity extends AppCompatActivity {
 
         TotalTime.setText(String.format("%d:%d",
                 TimeUnit.MILLISECONDS.toMinutes(totalTime),
-                TimeUnit.MILLISECONDS.toSeconds(totalTime))
-        );
+                TimeUnit.MILLISECONDS.toSeconds( totalTime) -TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(totalTime))));
 
 
         buttonPlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
+            StartPlay();
 
-                if (!mediaPlayer.isPlaying()) {
-             //       seekBar.setProgress(0);
-
-                    mediaPlayer.start();
-                    handler.postDelayed(UpdateSongTime,100);
-                }
             }
 
         });
@@ -131,19 +136,24 @@ public class PlayerMActivity extends AppCompatActivity {
     private Runnable UpdateSongTime = new Runnable() {
         public void run() {
             currentTime = mediaPlayer.getCurrentPosition();
-           if(TimeUnit.MILLISECONDS.toSeconds(currentTime)<10&&TimeUnit.MILLISECONDS.toMinutes(currentTime)<1){
-            CurrentTime.setText(String.format("%d:0%d",
-                    TimeUnit.MILLISECONDS.toMinutes( currentTime),
-                    TimeUnit.MILLISECONDS.toSeconds( currentTime) ));
-           }
-            else
-           {
+
                CurrentTime.setText(String.format("%d:%d",
-                   TimeUnit.MILLISECONDS.toMinutes( currentTime),
-                   TimeUnit.MILLISECONDS.toSeconds( currentTime) ));
-           }
+                       TimeUnit.MILLISECONDS.toMinutes( currentTime),TimeUnit.MILLISECONDS.toSeconds(currentTime) -
+                               TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.
+                                       toMinutes(currentTime)))            );
+
             seekBar.setProgress((int)currentTime);
             handler.postDelayed(this, 100);
         }
     };
+
+    public void StartPlay(){
+        if (!mediaPlayer.isPlaying()) {
+
+            mediaPlayer.start();
+            handler.postDelayed(UpdateSongTime,100);
+        }
+
+
+    }
 }

@@ -2,10 +2,9 @@ package com.hrbtechsolutions.mplayer.mediaplayer;
 
 import android.Manifest;
 import android.content.ContentResolver;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
@@ -14,23 +13,21 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 
 public class MainActivity extends AppCompatActivity {
 
     ArrayList<Song> arrayofSongs=new ArrayList<Song>();
-    private final String track_name = MediaStore.Audio.Media.TITLE;
-    private final String artist = MediaStore.Audio.Media.ARTIST;
 
-    MediaPlayer mediaPlayer=new MediaPlayer();
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        final Intent intent=new Intent(this,PlayerMActivity.class);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
@@ -61,8 +58,7 @@ public class MainActivity extends AppCompatActivity {
 
             } while (cursor.moveToNext());
         }
-       final MediaPlayer mediaPlayer=new MediaPlayer();
-        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+
 
         SongAdapter adapter=new SongAdapter(this,arrayofSongs);
         AdapterView.OnItemClickListener mMessageClickedHandler = new AdapterView.OnItemClickListener() {
@@ -70,18 +66,10 @@ public class MainActivity extends AppCompatActivity {
 
                 Uri myUri=Uri.parse(arrayofSongs.get(position).dataPath);
 
-                try {
+                intent.putExtra("uri",myUri.toString());
 
-                    mediaPlayer.setDataSource(getApplicationContext(), myUri);
-                    mediaPlayer.prepare();
-                    mediaPlayer.start();
+                startActivity(intent);
 
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                Toast.makeText(getApplicationContext(), "Your toast message."+position,
-                        Toast.LENGTH_SHORT).show();
 
             }
         };
