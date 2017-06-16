@@ -1,6 +1,7 @@
 package com.hrbtechsolutions.mplayer.mediaplayer;
 
 
+import android.content.Intent;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -11,7 +12,7 @@ import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import java.io.IOException;
+
 import java.util.concurrent.TimeUnit;
 import android.os.Handler;
 
@@ -30,24 +31,19 @@ public class PlayerMActivity extends AppCompatActivity {
     SeekBar seekBar;
     Handler handler=new Handler();
     long totalTime, currentTime;
+    Uri myUri;
 
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mediaPlayer.stop();
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player_m);
 
-        Uri myUri = Uri.parse(getIntent().getExtras().getString("uri"));
+        myUri = Uri.parse(getIntent().getExtras().getString("uri"));
 
         mediaPlayer = MediaPlayer.create(getApplicationContext(),myUri);
 
-        StartPlay();
+           StartPlay();
 
         Uri uri;
         uri=myUri;
@@ -59,8 +55,8 @@ public class PlayerMActivity extends AppCompatActivity {
         ArtistTitle = (TextView) findViewById(R.id.ArtistOfSong);
         AlbumTitle = (TextView) findViewById(R.id.AlbumOfSong);
         TotalTime = (TextView) findViewById(R.id.TotalTime);
-        CurrentTime = (TextView) findViewById(R.id.CurrentTime);
-        seekBar = (SeekBar) findViewById(R.id.seekBar);
+         CurrentTime = (TextView) findViewById(R.id.CurrentTime);
+       seekBar = (SeekBar) findViewById(R.id.seekBar);
         totalTime = mediaPlayer.getDuration();
         seekBar.setMax((int)totalTime);
 
@@ -81,8 +77,8 @@ public class PlayerMActivity extends AppCompatActivity {
             public void onStopTrackingTouch(SeekBar seekBar) {
 
                 int i=seekBar.getProgress();
-                mediaPlayer.seekTo(i);
-                mediaPlayer.start();
+                MediaPlayerService.mediaPlayer.seekTo(i);
+                MediaPlayerService.mediaPlayer.start();
             }
         });
 
@@ -105,7 +101,7 @@ public class PlayerMActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-            StartPlay();
+                MediaPlayerService.mediaPlayer.start();
 
             }
 
@@ -114,19 +110,21 @@ public class PlayerMActivity extends AppCompatActivity {
         buttonStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mediaPlayer != null && mediaPlayer.isPlaying()) {
-                    mediaPlayer.seekTo(0);
-                    mediaPlayer.pause();
+                if (MediaPlayerService.mediaPlayer != null && MediaPlayerService.mediaPlayer.isPlaying()) {
+                    MediaPlayerService.mediaPlayer.seekTo(0);
+                    MediaPlayerService.mediaPlayer.pause();
 
                 }
+
+
             }
         });
 
         buttonPause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mediaPlayer.isPlaying())
-                    mediaPlayer.pause();
+                if (MediaPlayerService.mediaPlayer.isPlaying())
+                    MediaPlayerService.mediaPlayer.pause();
 
             }
         });
@@ -135,25 +133,25 @@ public class PlayerMActivity extends AppCompatActivity {
 
     private Runnable UpdateSongTime = new Runnable() {
         public void run() {
-            currentTime = mediaPlayer.getCurrentPosition();
+            currentTime = MediaPlayerService.mediaPlayer.getCurrentPosition();
 
-               CurrentTime.setText(String.format("%d:%d",
-                       TimeUnit.MILLISECONDS.toMinutes( currentTime),TimeUnit.MILLISECONDS.toSeconds(currentTime) -
-                               TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.
-                                       toMinutes(currentTime)))            );
+            CurrentTime.setText(String.format("%d:%d",
+                    TimeUnit.MILLISECONDS.toMinutes( currentTime),TimeUnit.MILLISECONDS.toSeconds(currentTime) -
+                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.
+                                    toMinutes(currentTime)))            );
 
             seekBar.setProgress((int)currentTime);
             handler.postDelayed(this, 100);
         }
     };
 
+
     public void StartPlay(){
-        if (!mediaPlayer.isPlaying()) {
 
-            mediaPlayer.start();
-            handler.postDelayed(UpdateSongTime,100);
-        }
-
+        Intent serviceIntent = new Intent(PlayerMActivity.this, MediaPlayerService.class);
+        serviceIntent.putExtra("ServiceUri", myUri.toString());
+        startService(serviceIntent);
+        handler.postDelayed(UpdateSongTime, 100);
 
     }
 }
