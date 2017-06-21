@@ -1,6 +1,8 @@
 package com.hrbtechsolutions.mplayer.mediaplayer;
 
+import android.app.NotificationManager;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -44,8 +46,6 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnPrepare
 
         }
 
-
-
         return START_STICKY;
     }
 
@@ -58,8 +58,11 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnPrepare
     public void onDestroy(){
         super.onDestroy();
         mediaPlayer.stop();
-
+        NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        manager.cancel(PlayerMActivity.MY_NOTIFICATION_ID);
 
     }
+
+
 
 }

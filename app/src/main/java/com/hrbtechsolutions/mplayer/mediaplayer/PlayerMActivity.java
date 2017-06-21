@@ -1,18 +1,20 @@
 package com.hrbtechsolutions.mplayer.mediaplayer;
 
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.NotificationCompat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
-
-
 import java.util.concurrent.TimeUnit;
 import android.os.Handler;
 
@@ -32,7 +34,15 @@ public class PlayerMActivity extends AppCompatActivity {
     Handler handler=new Handler();
     long totalTime, currentTime;
     Uri myUri;
+    Uri uri;
+    public static MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+    public static final int MY_NOTIFICATION_ID= 1234;
 
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,12 +50,7 @@ public class PlayerMActivity extends AppCompatActivity {
         setContentView(R.layout.activity_player_m);
 
         myUri = Uri.parse(getIntent().getExtras().getString("uri"));
-
         mediaPlayer = MediaPlayer.create(getApplicationContext(),myUri);
-
-           StartPlay();
-
-        Uri uri;
         uri=myUri;
 
         buttonPlay = (Button) findViewById(R.id.PlayButton);
@@ -55,11 +60,10 @@ public class PlayerMActivity extends AppCompatActivity {
         ArtistTitle = (TextView) findViewById(R.id.ArtistOfSong);
         AlbumTitle = (TextView) findViewById(R.id.AlbumOfSong);
         TotalTime = (TextView) findViewById(R.id.TotalTime);
-         CurrentTime = (TextView) findViewById(R.id.CurrentTime);
-       seekBar = (SeekBar) findViewById(R.id.seekBar);
+        CurrentTime = (TextView) findViewById(R.id.CurrentTime);
+        seekBar = (SeekBar) findViewById(R.id.seekBar);
         totalTime = mediaPlayer.getDuration();
         seekBar.setMax((int)totalTime);
-
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -82,15 +86,12 @@ public class PlayerMActivity extends AppCompatActivity {
             }
         });
 
-        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
         retriever.setDataSource(getApplicationContext(), uri);
-
         ArtistTitle.setText(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST));
         SongTitle.setText(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE));
         AlbumTitle.setText(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM));
 
-
-
+        StartPlay();
 
         TotalTime.setText(String.format("%d:%d",
                 TimeUnit.MILLISECONDS.toMinutes(totalTime),
@@ -150,8 +151,30 @@ public class PlayerMActivity extends AppCompatActivity {
 
         Intent serviceIntent = new Intent(PlayerMActivity.this, MediaPlayerService.class);
         serviceIntent.putExtra("ServiceUri", myUri.toString());
+        addNotification();
         startService(serviceIntent);
         handler.postDelayed(UpdateSongTime, 100);
+
+    }
+
+    private void addNotification() {
+        NotificationCompat.Builder builder =
+                (NotificationCompat.Builder) new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.drawable.holdplay)
+                        .setOngoing(true)
+                        .setContentTitle(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE))
+                        .setContentText(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST));
+
+        Intent notificationIntent = new Intent(this, MainActivity.class);
+
+        PendingIntent contentIntent = PendingIntent.getActivity(this, MY_NOTIFICATION_ID, notificationIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+        builder.setContentIntent(contentIntent);
+
+        // Add as notification
+        NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        manager.notify(MY_NOTIFICATION_ID, builder.build());
+
 
     }
 }
